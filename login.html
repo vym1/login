@@ -3,22 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
 <title>Login Hotspot</title>
 <style>
   :root{
-    --bg-1:#f6f1ee;
-    --bg-2:#efe6e1;
+    --bg-1:#f4f8f9;
+    --bg-2:#e7f1f3;
     --card:#ffffff;
-    --ink:#241f1d;
-    --muted:#8a7f7a;
-    --line:#ece3de;
-    --accent:#a3272c;
-    --accent-dark:#7d1d21;
-    --accent-soft:#f4e0df;
-    --error-bg:#fdecec;
-    --error-ink:#a3272c;
+    --ink:#16262c;
+    --muted:#66808a;
+    --line:#e3edf0;
+    --accent:#0f7a8c;
+    --accent-dark:#0a5561;
+    --accent-soft:#e2f2f4;
+    --error-bg:#fdeeee;
+    --error-ink:#c0392b;
   }
   *{box-sizing:border-box;}
+  html{ color-scheme: light; }
   html,body{height:100%;}
   body{
     margin:0;
@@ -35,12 +38,39 @@
     padding:32px 20px;
   }
 
+  @keyframes fadeSlideUp{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  @keyframes pulseGlow{
+    0%,100%{ box-shadow:0 10px 24px -10px rgba(15,122,140,0.55), 0 0 0 0 rgba(15,122,140,0.35); }
+    50%{ box-shadow:0 10px 24px -10px rgba(15,122,140,0.55), 0 0 0 8px rgba(15,122,140,0); }
+  }
+  @keyframes drift{
+    0%,100%{ transform:translate(0,0); }
+    50%{ transform:translate(-12px,10px); }
+  }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:-10%;
+    background:
+      radial-gradient(600px 400px at 20% 20%, rgba(15,122,140,0.10), transparent 60%),
+      radial-gradient(500px 400px at 85% 80%, rgba(10,85,97,0.10), transparent 60%);
+    animation:drift 12s ease-in-out infinite;
+    pointer-events:none;
+    z-index:0;
+  }
+  .page{ position:relative; z-index:1; }
+
   .page{
     width:100%;
     max-width:380px;
     display:flex;
     flex-direction:column;
     align-items:center;
+    animation:fadeSlideUp .55s ease both;
   }
 
   .brand{
@@ -53,7 +83,8 @@
     border-radius:14px;
     background:linear-gradient(155deg,var(--accent),var(--accent-dark));
     display:flex;align-items:center;justify-content:center;
-    box-shadow:0 10px 24px -10px rgba(163,39,44,0.55);
+    box-shadow:0 10px 24px -10px rgba(15,122,140,0.55);
+    animation:pulseGlow 2.6s ease-in-out infinite;
   }
   .brand-mark svg{width:26px;height:26px;}
   .brand h1{
@@ -75,8 +106,13 @@
     background:var(--card);
     border-radius:20px;
     padding:28px 26px 24px;
-    box-shadow:0 20px 45px -22px rgba(36,31,29,0.28);
+    box-shadow:0 20px 45px -22px rgba(22,38,44,0.28);
     border:1px solid var(--line);
+    animation:fadeSlideUp .6s ease .1s both;
+    transition:box-shadow .25s ease;
+  }
+  .card:hover{
+    box-shadow:0 24px 50px -20px rgba(22,38,44,0.32);
   }
 
   .card-title{
@@ -112,13 +148,27 @@
     outline:none;
     transition:border-color .15s ease, background .15s ease;
     font-family:inherit;
+    color-scheme: light;
+    -webkit-text-fill-color:var(--ink);
   }
+  .input-wrap input::placeholder{ color:#a89e99; opacity:1; }
   .input-wrap input:focus{
     border-color:var(--accent);
     background:#ffffff;
+    box-shadow:0 0 0 4px rgba(15,122,140,0.12);
   }
   .input-wrap input#password{
     padding-right:44px;
+  }
+
+  /* cegah autofill browser memaksa warna gelap di HP */
+  .input-wrap input:-webkit-autofill,
+  .input-wrap input:-webkit-autofill:hover,
+  .input-wrap input:-webkit-autofill:focus{
+    -webkit-text-fill-color:var(--ink);
+    -webkit-box-shadow:0 0 0 1000px #fbfaf9 inset;
+    box-shadow:0 0 0 1000px #fbfaf9 inset;
+    transition:background-color 9999s ease-in-out 0s;
   }
 
   .toggle-pw{
@@ -162,12 +212,12 @@
     font-weight:700;
     cursor:pointer;
     letter-spacing:0.01em;
-    box-shadow:0 12px 24px -12px rgba(163,39,44,0.6);
+    box-shadow:0 12px 24px -12px rgba(15,122,140,0.6);
     transition:transform .12s ease, box-shadow .12s ease;
     margin-top:4px;
   }
-  .submit-btn:hover{transform:translateY(-1px);}
-  .submit-btn:active{transform:translateY(0);}
+  .submit-btn:hover{transform:translateY(-1px) scale(1.01); box-shadow:0 16px 28px -12px rgba(15,122,140,0.65);}
+  .submit-btn:active{transform:translateY(0) scale(0.98);}
 
   .footer{
     margin-top:22px;
@@ -191,14 +241,16 @@
   <div class="brand">
     <div class="brand-mark">
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 9C8.5 5 15.5 5 20 9" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M7 12.5C10 10 14 10 17 12.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M10 16C11.3 15 12.7 15 14 16" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-        <circle cx="12" cy="18.6" r="1.3" fill="white"/>
+        <rect x="6" y="14" width="12" height="6" rx="1.6" stroke="white" stroke-width="1.7"/>
+        <circle cx="9.2" cy="17" r="0.9" fill="white"/>
+        <circle cx="12" cy="17" r="0.9" fill="white"/>
+        <path d="M9 11.2C10 10.3 14 10.3 15 11.2" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M7 8.4C9.2 6.4 14.8 6.4 17 8.4" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="12" cy="14" r="1" fill="white"/>
       </svg>
     </div>
-    <h1>Riski Redaman Tinggi</h1>
-    <p>Selamat datang di SMK PGRI Brati</p>
+    <h1>Vylnnz</h1>
+    <p>SELAMAT DATANG DI SMK PGRI BRATI BY RISKI</p>
   </div>
 
   <div class="card">
@@ -208,7 +260,7 @@
     <div class="error-box">$(error)</div>
     $(endif)
 
-    <form name="login" action="$(link-login-only)" method="post">
+    <form name="sendin" action="$(link-login-only)" method="post" onsubmit="return doLogin()">
       <input type="hidden" name="dst" value="$(link-orig)">
       <input type="hidden" name="popup" value="$(popup)">
 
@@ -222,7 +274,8 @@
       <div class="field">
         <label for="password">Kata sandi</label>
         <div class="input-wrap">
-          <input type="password" name="password" id="password" placeholder="Masukkan kata sandi" autocomplete="off" required>
+          <input type="password" id="password" placeholder="Masukkan kata sandi" autocomplete="off" required>
+          <input type="hidden" name="password" id="password-hidden">
           <button type="button" class="toggle-pw" id="togglePw" aria-label="Tampilkan kata sandi">
             <svg class="eye" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M2 12C4.2 7.5 8 5 12 5C16 5 19.8 7.5 22 12C19.8 16.5 16 19 12 19C8 19 4.2 16.5 2 12Z" stroke="currentColor" stroke-width="1.6"/>
@@ -254,6 +307,23 @@
     toggle.classList.toggle('is-visible', !visible);
     toggle.setAttribute('aria-label', visible ? 'Tampilkan kata sandi' : 'Sembunyikan kata sandi');
   });
+</script>
+
+<!-- md5.js bawaan Mikrotik: file ini harus ADA di folder Files > hotspot yang sama, jangan dihapus -->
+<script type="text/javascript" src="md5.js"></script>
+<script language="javascript">
+  function doLogin(){
+    var form = document.forms['sendin'];
+    var plain = document.getElementById('password').value;
+    if (form.username.value === ""){ form.username.focus(); return false; }
+    if (plain === "" && "$(chap-id)" === ""){ document.getElementById('password').focus(); return false; }
+    if ("$(chap-id)" !== ""){
+      document.getElementById('password-hidden').value = hexMD5("$(chap-id)" + plain + "$(chap-challenge)");
+    } else {
+      document.getElementById('password-hidden').value = plain;
+    }
+    return true;
+  }
 </script>
 
 </body>
